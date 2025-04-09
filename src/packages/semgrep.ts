@@ -3,7 +3,7 @@ import { createPackage } from "../create_package";
 export const semgrep = createPackage({
   name: "semgrep",
   aliases: ["semgrep-mcp"],
-  dependsOn: [],
+  dependsOn: ["uv"],
   inputs: [],
   buildConfig(inputs) {
     const args: string[] = ["semgrep-mcp"];
