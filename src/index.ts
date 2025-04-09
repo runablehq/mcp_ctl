@@ -420,9 +420,7 @@ async function main() {
     .alias("h", "help")
     .alias("v", "version")
     .wrap(yargs().terminalWidth())
-    .epilogue(
-      "For more information, visit https://github.com/cloudycotton/mcpctl"
-    )
+    .epilogue("For more information, visit https://github.com/runablehq/mcpctl")
     .demandCommand(1, "Please specify a command")
     .parse();
 }
