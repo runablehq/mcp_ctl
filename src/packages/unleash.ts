@@ -2,8 +2,8 @@ import { createPackage } from "../create_package";
 
 // Unleash MCP Server
 
-export const unleash_mcp = createPackage({
-  name: "unleash-mcp",
+export const unleash = createPackage({
+  name: "unleash",
   aliases: ["unleash"],
   dependsOn: [],
   inputs: [
@@ -41,10 +41,10 @@ export const unleash_mcp = createPackage({
       command: "npx",
       args,
       env: {
-        "MCP_TRANSPORT": inputs["MCP_TRANSPORT"] as string,
-        "MCP_HTTP_PORT": inputs["MCP_HTTP_PORT"] as string,
-        "UNLEASH_URL": inputs["UNLEASH_URL"] as string,
-        "UNLEASH_API_TOKEN": inputs["UNLEASH_API_TOKEN"] as string,
+        MCP_TRANSPORT: inputs["MCP_TRANSPORT"] as string,
+        MCP_HTTP_PORT: inputs["MCP_HTTP_PORT"] as string,
+        UNLEASH_URL: inputs["UNLEASH_URL"] as string,
+        UNLEASH_API_TOKEN: inputs["UNLEASH_API_TOKEN"] as string,
       },
     };
   },
