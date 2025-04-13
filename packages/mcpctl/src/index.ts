@@ -313,11 +313,14 @@ async function listPackages(searchTerm?: string) {
   let packages = await registryManager.listPackages();
   // console.log(packages);
   if (searchTerm) {
+    console.log("search term found",searchTerm)
     console.log(term.yellow(`Searching for packages matching "${searchTerm}"...`));
-    const matchedNames = await searchPackages(searchTerm);
+    const matchedNames = await registryManager.getPackage(searchTerm);
     // console.log(matchedNames);
-    packages = packages.filter(pkg => matchedNames.includes(pkg.name));
-    
+    // console.log("MAtched names",matchedNames)
+    // packages = packages.filter(pkg => matchedNames.includes(pkg.name));
+    console.log(await formatPackage(matchedNames));
+    return;
     if (packages.length === 0) {
       console.log(term.yellow(`No packages found matching "${searchTerm}"`));
       return;
