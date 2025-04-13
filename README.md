@@ -4,7 +4,7 @@
 
 ### A powerful package manager for MCP (Model Context Protocol) servers ✨
 
-[![Discord](https://img.shields.io/badge/discord-purple.svg)](https://discord.gg/BECB2t5x)
+[![Discord](https://img.shields.io/badge/discord-purple.svg)](https://discord.gg/BcWWRCnap6)
 
 https://github.com/user-attachments/assets/eb618219-c638-4546-b2e3-865f46a4c3ab
 
