@@ -13,21 +13,6 @@ export class RegistryManager {
   }
 
   async getPackage(name: string): Promise<PackageMetadata | null> {
-    const { data: aliasEntry, error: aliasError } = await this.supabase
-        .from('package_aliases')
-        .select('package_id')
-        .eq('alias', name)
-        .maybeSingle();
-
-    if (aliasError) {
-      console.error('Error fetching alias:', aliasError);
-      return;
-    }
-
-    if (!aliasEntry) {
-      console.log('No package found for alias:', name);
-      return;
-    }
     const { data: pkg, error: packageError } = await this.supabase
         .from('packages')
         .select(`
@@ -36,7 +21,7 @@ export class RegistryManager {
           package_aliases (alias),
           package_dependencies (dependency_name)
         `)
-        .eq('id', aliasEntry.package_id)
+        .eq('name', name)
         .single();
 
 
@@ -60,21 +45,49 @@ export class RegistryManager {
     };
   }
 
-  async listPackages(): Promise<PackageMetadata[]> {
-    const { data: packages, error } = await this.supabase
-      .from('packages')
-      .select(`
-        *,
-        package_inputs (id, meta),
-        package_aliases (alias),
-        package_dependencies (dependency_name)
-      `);
-
-    if (error) {
-      console.error('Error fetching packages:', error);
-      return [];
+  async listPackages(searchTerm?: string): Promise<PackageMetadata[]> {
+    if (searchTerm){
+      const { data: aliasEntry, error: aliasError } = await this.supabase
+        .from('package_aliases')
+        .select('package_id')
+        .eq('alias', searchTerm);
+      if (aliasError) {
+        console.error('Error fetching alias:', aliasError);
+        return;
+      }
+      if (!aliasEntry) {
+        console.log('No package found for alias:', name);
+        return;
+      }
+      const packageIds = aliasEntry.map(entry => entry.package_id);
+      var { data: packages, error: packageError } = await this.supabase
+          .from('packages')
+          .select(`
+            *,
+            package_inputs (id, meta),
+            package_aliases (alias),
+            package_dependencies (dependency_name)
+          `)
+          .in('id', packageIds);
+          if (packageError) {
+            console.error('Error fetching package:', packageError);
+          }
+      if (!packages) return null;
     }
-
+    else{
+        var { data: packages, error } = await this.supabase
+        .from('packages')
+        .select(`
+          *,
+          package_inputs (id, meta),
+          package_aliases (alias),
+          package_dependencies (dependency_name)
+        `);
+      if (error) {
+        console.error('Error fetching packages:', error);
+        return [];
+      }
+    }
     return packages.map(pkg => ({
       name: pkg.name,
       version: pkg.version,
@@ -86,6 +99,7 @@ export class RegistryManager {
       aliases: pkg.package_aliases?.map(a => a.alias) || [],
       dependencies: pkg.package_dependencies?.map(d => d.dependency_name) || []
     }));
+    
   }
 
   async buildConfig(name: string, inputs: Record<string, any>): Promise<{

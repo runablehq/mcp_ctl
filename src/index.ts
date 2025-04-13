@@ -304,17 +304,9 @@ async function startServer(serverName: string) {
 }
 
 async function listPackages(searchTerm?: string) {
-  let packages = await registryManager.listPackages();
+  let packages = await registryManager.listPackages(searchTerm);
 
-  if (searchTerm) {
-    console.log("search term found",searchTerm)
-    console.log(term.yellow(`Searching for packages matching "${searchTerm}"...`));
-    const matchedNames = await registryManager.getPackage(searchTerm);
-    console.log(await formatPackage(matchedNames));
-    return;
-  } else {
-    console.log(term.bold("\nAvailable MCP Packages:"));
-  }
+  
 
   for (const pkg of packages) {
     console.log(await formatPackage(pkg));
