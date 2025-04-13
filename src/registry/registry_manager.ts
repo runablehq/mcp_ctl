@@ -13,22 +13,36 @@ export class RegistryManager {
   }
 
   async getPackage(name: string): Promise<PackageMetadata | null> {
-    const { data: pkg, error } = await this.supabase
-      .from('packages')
-      .select(`
-        *,
-        package_inputs (id, meta),
-        package_aliases (alias),
-        package_dependencies (dependency_name)
-      `)
-      .eq('name', name)
-      .single();
+    const { data: aliasEntry, error: aliasError } = await this.supabase
+        .from('package_aliases')
+        .select('package_id')
+        .eq('alias', name)
+        .maybeSingle();
 
-    if (error) {
-      console.error('Error fetching package:', error);
-      return null;
+    if (aliasError) {
+      console.error('Error fetching alias:', aliasError);
+      return;
     }
 
+    if (!aliasEntry) {
+      console.log('No package found for alias:', name);
+      return;
+    }
+    const { data: pkg, error: packageError } = await this.supabase
+        .from('packages')
+        .select(`
+          *,
+          package_inputs (id, meta),
+          package_aliases (alias),
+          package_dependencies (dependency_name)
+        `)
+        .eq('id', aliasEntry.package_id)
+        .single();
+
+
+        if (packageError) {
+          console.error('Error fetching package:', packageError);
+        }
     if (!pkg) return null;
 
     const inputs = pkg.package_inputs?.map(input => input.meta) || [];
