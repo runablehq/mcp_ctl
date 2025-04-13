@@ -10,19 +10,15 @@ import { readClaudeConfig, writeClaudeConfig } from "./claude_config";
 import { term } from "./term";
 import { InputType } from "./create_package";
 import { RegistryManager } from './registry/registry_manager';
-import { Registry, PackageMetadata } from './types/registry';
+import { PackageMetadata } from './types/registry';
 const registryManager = new RegistryManager();
-// Search functionality
+
 async function searchPackages(term: string) {
   const packages = await registryManager.listPackages();
-  // console.log("packages", packages);
   const packageNames = packages.map(p => p.name);
-  // console.log("packageNames", packageNames);
   const results = fuzzy
     .filter(term, packageNames)
     .map((result) => result.string);
-  // console.log("results", results);
-  // Include aliases in search
   packages.forEach((pkg) => {
     if (!results.includes(pkg.name)) {
       const matchesAlias = pkg.aliases?.some(
@@ -35,9 +31,7 @@ async function searchPackages(term: string) {
   return results;
 }
 
-// Format output
 async function formatPackage(pkg: PackageMetadata) {
-  // const pkg = await registryManager.getPackage(name);
   if (!pkg) return '';
 
   return `
@@ -311,21 +305,13 @@ async function startServer(serverName: string) {
 
 async function listPackages(searchTerm?: string) {
   let packages = await registryManager.listPackages();
-  // console.log(packages);
+
   if (searchTerm) {
     console.log("search term found",searchTerm)
     console.log(term.yellow(`Searching for packages matching "${searchTerm}"...`));
     const matchedNames = await registryManager.getPackage(searchTerm);
-    // console.log(matchedNames);
-    // console.log("MAtched names",matchedNames)
-    // packages = packages.filter(pkg => matchedNames.includes(pkg.name));
     console.log(await formatPackage(matchedNames));
     return;
-    if (packages.length === 0) {
-      console.log(term.yellow(`No packages found matching "${searchTerm}"`));
-      return;
-    }
-    console.log(term.bold(`\nPackages matching "${searchTerm}":`));
   } else {
     console.log(term.bold("\nAvailable MCP Packages:"));
   }

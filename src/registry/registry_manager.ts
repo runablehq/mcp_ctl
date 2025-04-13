@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { Registry, PackageMetadata } from '../types/registry';
+import { PackageMetadata } from '../types/registry';
 require('dotenv').config();
 
 export class RegistryManager {
@@ -10,11 +10,6 @@ export class RegistryManager {
       process.env.SUPABASE_URL || '',
       process.env.SUPABASE_ANON_KEY || ''
     );
-  }
-
-  async loadRegistry(): Promise<void> {
-    // No longer needed as we're using Supabase
-    return;
   }
 
   async getPackage(name: string): Promise<PackageMetadata | null> {
@@ -36,7 +31,6 @@ export class RegistryManager {
 
     if (!pkg) return null;
 
-    // Transform the database result into PackageMetadata format
     const inputs = pkg.package_inputs?.map(input => input.meta) || [];
     
     return {
@@ -96,7 +90,7 @@ export class RegistryManager {
       env: {} as Record<string, string>
     };
 
-    // Apply input configurations
+
     if (pkg.buildConfig.configOptions) {
       for (const [key, flag] of Object.entries(pkg.buildConfig.configOptions)) {
         if (inputs[key]) {
@@ -105,7 +99,7 @@ export class RegistryManager {
       }
     }
 
-    // Handle environment variables from inputs
+
     pkg.inputs.forEach(input => {
       if (inputs[input.name]) {
         config.env[input.name] = inputs[input.name];
