@@ -1,105 +1,64 @@
-import { createClient } from '@supabase/supabase-js';
 import { PackageMetadata } from '../types/registry';
 require('dotenv').config();
 
 export class RegistryManager {
-  private supabase;
-
-  constructor() {
-    this.supabase = createClient(
-      process.env.SUPABASE_URL || '',
-      process.env.SUPABASE_ANON_KEY || ''
-    );
-  }
+  
+  
 
   async getPackage(name: string): Promise<PackageMetadata | null> {
-    const { data: pkg, error: packageError } = await this.supabase
-        .from('packages')
-        .select(`
-          *,
-          package_inputs (id, meta),
-          package_aliases (alias),
-          package_dependencies (dependency_name)
-        `)
-        .eq('name', name)
-        .single();
+    try {
+      
+      const response = await fetch(`${process.env.BACKEND_URL || ''}/get-package?package_name=${name}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      const packages = data.packages;
 
+      if (!packages || packages.length === 0) return null;
+      const pkg = packages[0];
 
-        if (packageError) {
-          console.error('Error fetching package:', packageError);
-        }
-    if (!pkg) return null;
-
-    const inputs = pkg.package_inputs?.map(input => input.meta) || [];
-    
-    return {
-      name: pkg.name,
-      version: pkg.version,
-      description: pkg.description,
-      repository: pkg.repository,
-      maintainer: pkg.maintainer,
-      inputs: inputs,
-      buildConfig: pkg.build_config,
-      aliases: pkg.package_aliases?.map(a => a.alias) || [],
-      dependencies: pkg.package_dependencies?.map(d => d.dependency_name) || []
-    };
+      return {
+        name: pkg.name,
+        version: pkg.version,
+        description: pkg.description,
+        repository: pkg.repository,
+        maintainer: pkg.maintainer,
+        inputs: pkg.inputs?.map(input => input.meta) || [],
+        buildConfig: pkg.build_config,
+        dependencies: pkg.dependencies?.map(d => d.dependency_name) || []
+      };
+    } catch (error) {
+      console.error('Error fetching package:', error);
+      return null;
+    }
   }
 
   async listPackages(searchTerm?: string): Promise<PackageMetadata[]> {
-    if (searchTerm){
-      const { data: aliasEntry, error: aliasError } = await this.supabase
-        .from('package_aliases')
-        .select('package_id')
-        .eq('alias', searchTerm);
-      if (aliasError) {
-        console.error('Error fetching alias:', aliasError);
-        return;
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || ''}/get-package${searchTerm ? `?package_name=${searchTerm}` : ''}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      if (!aliasEntry) {
-        console.log('No package found for alias:', name);
-        return;
-      }
-      const packageIds = aliasEntry.map(entry => entry.package_id);
-      var { data: packages, error: packageError } = await this.supabase
-          .from('packages')
-          .select(`
-            *,
-            package_inputs (id, meta),
-            package_aliases (alias),
-            package_dependencies (dependency_name)
-          `)
-          .in('id', packageIds);
-          if (packageError) {
-            console.error('Error fetching package:', packageError);
-          }
-      if (!packages) return null;
+      const data = await response.json();
+      const packages = data.packages;
+
+      if (!packages) return [];
+
+      return packages.map(pkg => ({
+        name: pkg.name,
+        version: pkg.version,
+        description: pkg.description,
+        repository: pkg.repository,
+        maintainer: pkg.maintainer,
+        inputs: pkg.inputs?.map(input => input.meta) || [],
+        buildConfig: pkg.build_config,
+        dependencies: pkg.dependencies?.map(d => d.dependency_name) || []
+      }));
+    } catch (error) {
+      console.error('Error fetching packages:', error);
+      return [];
     }
-    else{
-        var { data: packages, error } = await this.supabase
-        .from('packages')
-        .select(`
-          *,
-          package_inputs (id, meta),
-          package_aliases (alias),
-          package_dependencies (dependency_name)
-        `);
-      if (error) {
-        console.error('Error fetching packages:', error);
-        return [];
-      }
-    }
-    return packages.map(pkg => ({
-      name: pkg.name,
-      version: pkg.version,
-      description: pkg.description,
-      repository: pkg.repository,
-      maintainer: pkg.maintainer,
-      inputs: pkg.package_inputs?.map(input => input.meta) || [],
-      buildConfig: pkg.build_config,
-      aliases: pkg.package_aliases?.map(a => a.alias) || [],
-      dependencies: pkg.package_dependencies?.map(d => d.dependency_name) || []
-    }));
-    
   }
 
   async buildConfig(name: string, inputs: Record<string, any>): Promise<{
