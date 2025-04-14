@@ -2,41 +2,16 @@ import { PackageMetadata } from '../types/registry';
 require('dotenv').config();
 
 export class RegistryManager {
-  
-  
 
-  async getPackage(name: string): Promise<PackageMetadata | null> {
+  async listPackages(searchTerm?: string, hard_search?: boolean): Promise<PackageMetadata[]> {
     try {
-      
-      const response = await fetch(`${process.env.BACKEND_URL || ''}/get-package?package_name=${name}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      const packages = data.packages;
+      const params = new URLSearchParams();
 
-      if (!packages || packages.length === 0) return null;
-      const pkg = packages[0];
+      if (searchTerm) params.append("package_name", searchTerm);
+      if (hard_search !== undefined) params.append("hard_search", String(hard_search));
 
-      return {
-        name: pkg.name,
-        version: pkg.version,
-        description: pkg.description,
-        repository: pkg.repository,
-        maintainer: pkg.maintainer,
-        inputs: pkg.inputs?.map(input => input.meta) || [],
-        buildConfig: pkg.build_config,
-        dependencies: pkg.dependencies?.map(d => d.dependency_name) || []
-      };
-    } catch (error) {
-      console.error('Error fetching package:', error);
-      return null;
-    }
-  }
-
-  async listPackages(searchTerm?: string): Promise<PackageMetadata[]> {
-    try {
-      const response = await fetch(`${process.env.BACKEND_URL || ''}/get-package${searchTerm ? `?package_name=${searchTerm}` : ''}`);
+      const url = `${process.env.BACKEND_URL || ''}/get-package?${params.toString()}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -66,7 +41,8 @@ export class RegistryManager {
     args: string[];
     env: Record<string, string>;
   }> {
-    const pkg = await this.getPackage(name);
+    let all_packages =await this.listPackages(name, true);
+    const pkg = all_packages[0]
     if (!pkg || !pkg.buildConfig) {
       throw new Error(`No build configuration found for package ${name}`);
     }
