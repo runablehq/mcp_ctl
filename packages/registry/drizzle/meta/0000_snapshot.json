@@ -1,129 +1,9 @@
 {
-  "id": "57eb7b3d-48a0-4607-81c3-4462927c4fa2",
+  "id": "57ebcedd-fa33-4670-826d-d0c4a3b1cc8c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.package_dependencies": {
-      "name": "package_dependencies",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "package_id": {
-          "name": "package_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "dependency_name": {
-          "name": "dependency_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "package_dependencies_package_id_packages_id_fk": {
-          "name": "package_dependencies_package_id_packages_id_fk",
-          "tableFrom": "package_dependencies",
-          "tableTo": "packages",
-          "columnsFrom": [
-            "package_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.package_inputs": {
-      "name": "package_inputs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "package_id": {
-          "name": "package_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "meta": {
-          "name": "meta",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "package_inputs_package_id_packages_id_fk": {
-          "name": "package_inputs_package_id_packages_id_fk",
-          "tableFrom": "package_inputs",
-          "tableTo": "packages",
-          "columnsFrom": [
-            "package_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.packages": {
       "name": "packages",
       "schema": "",
@@ -165,8 +45,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "build_config": {
-          "name": "build_config",
+        "meta": {
+          "name": "meta",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
