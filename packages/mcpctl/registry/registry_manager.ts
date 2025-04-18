@@ -26,9 +26,9 @@ export class RegistryManager {
         description: pkg.description,
         repository: pkg.repository,
         maintainer: pkg.maintainer,
-        inputs: pkg.inputs?.map(input => input.meta) || [],
-        buildConfig: pkg.build_config,
-        dependencies: pkg.dependencies?.map(d => d.dependency_name) || []
+        inputs: pkg.meta.inputs || [],
+        buildConfig: pkg.meta.build_config,
+        dependencies: pkg.meta.dependencies || []
       }));
     } catch (error) {
       console.error('Error fetching packages:', error);

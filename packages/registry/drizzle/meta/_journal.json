@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1744970083326,
-      "tag": "0000_sturdy_namorita",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1744970351371,
-      "tag": "0001_unusual_cyclops",
+      "when": 1744973962375,
+      "tag": "0000_first_prima",
       "breakpoints": true
     }
   ]
