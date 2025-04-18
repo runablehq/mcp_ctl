@@ -27,7 +27,7 @@ export class RegistryManager {
         repository: pkg.repository,
         maintainer: pkg.maintainer,
         inputs: pkg.meta.inputs || [],
-        buildConfig: pkg.meta.build_config,
+        buildConfig: pkg.meta.buildConfig,
         dependencies: pkg.meta.dependencies || []
       }));
     } catch (error) {
@@ -41,8 +41,10 @@ export class RegistryManager {
     args: string[];
     env: Record<string, string>;
   }> {
+    console.log("Install testing", name, inputs)
     let all_packages =await this.listPackages(name, true);
     const pkg = all_packages[0]
+    console.log("Install testing", pkg)
     if (!pkg || !pkg.buildConfig) {
       throw new Error(`No build configuration found for package ${name}`);
     }
