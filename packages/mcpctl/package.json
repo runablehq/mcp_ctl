@@ -6,7 +6,7 @@
     "mcpctl": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsup src/index.ts",
+    "build": "tsup index.ts",
     "dev": "tsx index.ts"
   },
   "dependencies": {

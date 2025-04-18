@@ -9,7 +9,7 @@ export default defineConfig({
     url: process.env.DATABASE_URL!,
   },
   migrations: {
-    table: 'migration-history', // `__drizzle_migrations` by default
-    schema: 'public', // used in PostgreSQL only, `drizzle` by default
+    table: 'migration-history',
+    schema: 'public', 
   },
 });
