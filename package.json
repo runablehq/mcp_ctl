@@ -7,10 +7,5 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces"
-  },
-  "dependencies": {
-    "drizzle-kit": "^0.31.0",
-    "drizzle-orm": "^0.42.0",
-    "pg": "^8.14.1"
   }
 }
