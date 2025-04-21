@@ -11,7 +11,6 @@
     "dev": "tsx index.ts"
   },
   "dependencies": {
-    "@mcpctl/registry": "file:../registry",
     "chalk": "^5.4.1",
     "dotenv": "^16.5.0",
     "fuzzy": "^0.1.3",
