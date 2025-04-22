@@ -1,5 +1,4 @@
 {
-
   "name": "@mcpctl/registry",
   "version": "0.0.1",
   "private": false,
@@ -14,7 +13,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@hono/node-server": "^1.4.0",
+    "@hono/node-server": "^1.14.1",
     "@supabase/supabase-js": "^2.49.4",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.0",
@@ -24,9 +23,10 @@
     "tsx": "^4.19.3"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+
+    "@types/node": "^22.14.1",
+
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
-
   }
 }
