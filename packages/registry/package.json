@@ -2,6 +2,7 @@
   "name": "@mcpctl/registry",
   "version": "0.0.1",
   "private": false,
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -23,9 +24,7 @@
     "tsx": "^4.19.3"
   },
   "devDependencies": {
-
     "@types/node": "^22.14.1",
-
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   }

@@ -1,5 +1,5 @@
 import { serve } from '@hono/node-server';
-import { app } from './index';
+import { app } from './index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
