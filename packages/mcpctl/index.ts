@@ -3,18 +3,19 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import inquirer from "inquirer";
-import fuzzy from "fuzzy";
-
 import { spawn } from "child_process";
 import { readClaudeConfig, writeClaudeConfig } from "./claude_config";
 import { term } from "./term";
 import { InputType } from "./create_package";
-import { RegistryManager } from './registry/registry_manager';
-import { PackageMetadata } from './types/registry';
-const registryManager = new RegistryManager();
+import { RegistryManager } from "./registry/registry_manager";
+import { PackageMetadata } from "./types/registry";
+
+const registryManager = new RegistryManager({
+  baseUrl: process.env.REGISTRY_URL || "https://registry.runable.xyz",
+});
 
 async function formatPackage(pkg: PackageMetadata) {
-  if (!pkg) return '';
+  if (!pkg) return "";
 
   return `
 ${term.bold(pkg.name)} ${term.gray(`(${pkg.version})`)}
@@ -52,7 +53,7 @@ ${term.green(name)}
   });
 }
 async function installPackage(packageName: string, serverName?: string) {
-  let packages = await registryManager.listPackages(packageName,true);
+  let packages = await registryManager.listPackages(packageName, true);
   const pkg = packages[0];
 
   if (pkg.dependencies.length > 0) {
@@ -76,10 +77,8 @@ async function installPackage(packageName: string, serverName?: string) {
     finalServerName = answers.serverName;
   }
 
-
   const inputs: Record<string, unknown> = {};
   for (const input of pkg.inputs) {
-
     const inputType = input.type as InputType;
 
     let promptType: string;
@@ -96,23 +95,19 @@ async function installPackage(packageName: string, serverName?: string) {
         break;
     }
 
-
     const promptConfig: any = {
       type: promptType,
       name: "value",
       message: `${input.description}${input.required ? " (required)" : ""}:`,
     };
 
-
     if ((input as any).default) {
       promptConfig.default = (input as any).default;
     }
 
-
     promptConfig.validate = (value: any) => {
       if (input.required) {
         if (inputType === "boolean") {
-
           return true;
         } else if (
           value === undefined ||
@@ -128,9 +123,7 @@ async function installPackage(packageName: string, serverName?: string) {
     inputs[input.name] = answers.value;
   }
 
-
-  const mcpConfig =  await registryManager.buildConfig(packageName, inputs);
-
+  const mcpConfig = await registryManager.buildConfig(packageName, inputs);
 
   await updateClaudeConfig({
     name: finalServerName,
@@ -272,11 +265,11 @@ async function startServer(serverName: string) {
 
 async function listPackages(searchTerm?: string) {
   let packages = await registryManager.listPackages(searchTerm);
-  if (packages.length ==0){
+  if (packages.length == 0) {
     console.log(term.red(`No packages found`));
     return;
   }
-  
+
   for (const pkg of packages) {
     console.log(await formatPackage(pkg));
   }

@@ -1,13 +1,12 @@
-import { pgTable, uuid, text, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, jsonb, timestamp } from "drizzle-orm/pg-core";
 
-export const packages = pgTable("packages", {
-  id: uuid("id").primaryKey().defaultRandom(),
+export const Package = pgTable("packages", {
+  id: text("id").notNull().primaryKey(),
   name: text("name").notNull(),
-  version: text("version").notNull(),
+  latest_version: text("latest_version").notNull(),
   description: text("description"),
   repository: text("repository"),
   maintainer: text("maintainer"),
-  meta: jsonb("meta").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
-});
+  manifest: jsonb("manifest").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+}).enableRLS();

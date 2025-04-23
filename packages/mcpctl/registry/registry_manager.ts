@@ -1,16 +1,28 @@
-import { PackageMetadata } from '../types/registry';
-require('dotenv').config();
+import { PackageMetadata } from "../types/registry";
+
+interface RegistryOptions {
+  baseUrl: string;
+}
 
 export class RegistryManager {
+  baseUrl: string;
 
-  async listPackages(searchTerm?: string, hard_search?: boolean): Promise<PackageMetadata[]> {
+  constructor(options: RegistryOptions) {
+    this.baseUrl = options.baseUrl;
+  }
+
+  async listPackages(
+    searchTerm?: string,
+    hard_search?: boolean
+  ): Promise<PackageMetadata[]> {
     try {
       const params = new URLSearchParams();
 
       if (searchTerm) params.append("package_name", searchTerm);
-      if (hard_search !== undefined) params.append("hard_search", String(hard_search));
+      if (hard_search !== undefined)
+        params.append("hard_search", String(hard_search));
 
-      const url = `https://mcpctl-production.up.railway.app/get-package?${params.toString()}`;
+      const url = `${this.baseUrl}/search?${params.toString()}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -20,31 +32,33 @@ export class RegistryManager {
 
       if (!packages) return [];
 
-      return packages.map(pkg => ({
+      return packages.map((pkg: any) => ({
         name: pkg.name,
         version: pkg.version,
         description: pkg.description,
         repository: pkg.repository,
         maintainer: pkg.maintainer,
-        inputs: pkg.meta.inputs || [],
-        buildConfig: pkg.meta.buildConfig,
-        dependencies: pkg.meta.dependencies || []
+        inputs: pkg.manifest.inputs || [],
+        buildConfig: pkg.manifest.buildConfig,
+        dependencies: pkg.manifest.dependencies || [],
       }));
     } catch (error) {
-      console.error('Error fetching packages:', error);
+      console.error("Error fetching packages:", error);
       return [];
     }
   }
 
-  async buildConfig(name: string, inputs: Record<string, any>): Promise<{
+  async buildConfig(
+    name: string,
+    inputs: Record<string, any>
+  ): Promise<{
     command: string;
     args: string[];
     env: Record<string, string>;
   }> {
-    console.log("Install testing", name, inputs)
-    let all_packages =await this.listPackages(name, true);
-    const pkg = all_packages[0]
-    console.log("Install testing", pkg)
+    let all_packages = await this.listPackages(name, true);
+    const pkg = all_packages[0];
+    console.log("Install testing", pkg);
     if (!pkg || !pkg.buildConfig) {
       throw new Error(`No build configuration found for package ${name}`);
     }
@@ -52,9 +66,8 @@ export class RegistryManager {
     const config = {
       command: pkg.buildConfig.command,
       args: [...pkg.buildConfig.args],
-      env: {} as Record<string, string>
+      env: {} as Record<string, string>,
     };
-
 
     if (pkg.buildConfig.configOptions) {
       for (const [key, flag] of Object.entries(pkg.buildConfig.configOptions)) {
@@ -64,8 +77,7 @@ export class RegistryManager {
       }
     }
 
-
-    pkg.inputs.forEach(input => {
+    pkg.inputs.forEach((input) => {
       if (inputs[input.name]) {
         config.env[input.name] = inputs[input.name];
       }

@@ -1,5 +1,5 @@
 {
-  "id": "57ebcedd-fa33-4670-826d-d0c4a3b1cc8c",
+  "id": "c09833fb-07ad-4a6c-9ca7-b03e829b7945",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,10 +10,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -21,8 +20,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "version": {
-          "name": "version",
+        "latest_version": {
+          "name": "latest_version",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -45,22 +44,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "meta": {
-          "name": "meta",
+        "manifest": {
+          "name": "manifest",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
@@ -72,7 +64,7 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
-      "isRLSEnabled": false
+      "isRLSEnabled": true
     }
   },
   "enums": {},
