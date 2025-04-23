@@ -10,7 +10,7 @@ export class RegistryManager {
       if (searchTerm) params.append("package_name", searchTerm);
       if (hard_search !== undefined) params.append("hard_search", String(hard_search));
 
-      const url = `${process.env.BACKEND_URL || ''}/get-package?${params.toString()}`;
+      const url = `https://mcpctl-production.up.railway.app/get-package?${params.toString()}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
