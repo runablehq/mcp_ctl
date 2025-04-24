@@ -33,7 +33,7 @@ export class RegistryManager {
 
       return packages.map((pkg: any) => ({
         name: pkg.name,
-        version: pkg.version,
+        version: pkg.latest_version,
         description: pkg.description,
         repository: pkg.repository,
         maintainer: pkg.maintainer,
