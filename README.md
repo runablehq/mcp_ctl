@@ -32,6 +32,32 @@ mcpctl packages github # search for mcp server with specific name
 mcpctl list # show existing mcp servers installed on the device
 ```
 
+
+## 🛠 Development Setup
+
+1. Clone the repository:
+git clone https://github.com/cloudycotton/mcp_ctl.git
+cd mcp_ctl
+
+
+2. Install dependencies:
+npm install
+
+
+4. Run development commands:
+
+# List packages
+npm run dev -- packages
+
+# Search for specific package
+npm run dev -- search github
+
+# Install a package
+npm run dev -- install playwright
+
+# List installed servers
+npm run dev -- list
+
 ## Adding your own package.
 
 1. Clone the repo

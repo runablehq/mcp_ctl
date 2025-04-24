@@ -2,7 +2,8 @@
   "name": "mcp-monorepo",
   "private": true,
   "workspaces": [
-    "packages/mcpctl"
+    "packages/mcpctl",
+    "packages/registry"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
