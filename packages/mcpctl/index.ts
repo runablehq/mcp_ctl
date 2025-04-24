@@ -9,9 +9,9 @@ import { term } from "./term";
 import { InputType } from "./create_package";
 import { RegistryManager } from "./registry/registry_manager";
 import { PackageMetadata } from "./types/registry";
-
 const registryManager = new RegistryManager({
-  baseUrl: process.env.REGISTRY_URL || "https://registry.runable.xyz",
+  
+  baseUrl: process.env.BACKEND_URL || "https://mcpctl-production.up.railway.app",
 });
 
 async function formatPackage(pkg: PackageMetadata) {

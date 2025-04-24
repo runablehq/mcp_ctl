@@ -1,5 +1,4 @@
 import { PackageMetadata } from "../types/registry";
-
 interface RegistryOptions {
   baseUrl: string;
 }
