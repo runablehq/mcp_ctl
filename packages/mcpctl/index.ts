@@ -61,9 +61,12 @@ async function installPackage(packageName: string, serverName?: string) {
       term.yellow(`Checking dependencies: ${pkg.dependencies.join(", ")}`)
     );
   }
-  const instructions = pkg.instructions;
-  for (const instruction of instructions) {
-    console.log(term.yellow(instruction));
+  if (pkg.instructions){
+    const instructions = pkg.instructions;
+    console.log(term.red("Instructions:"));
+    for (const instruction of instructions) {
+      console.log(term.yellow(instruction));
+    }
   }
 
   let finalServerName = serverName;
