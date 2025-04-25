@@ -20,6 +20,7 @@ export interface PackageMetadata {
     maintainer: string;
     inputs: PackageInput[];
     dependencies: string[];
+    instructions: string[];
     buildConfig: BuildConfig;
   }
   

@@ -39,6 +39,7 @@ export class RegistryManager {
         maintainer: pkg.maintainer,
         inputs: pkg.manifest.inputs || [],
         buildConfig: pkg.manifest.buildConfig,
+        instructions: pkg.manifest.instructions,
         dependencies: pkg.manifest.dependencies || [],
       }));
     } catch (error) {
