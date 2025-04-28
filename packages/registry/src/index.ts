@@ -3,10 +3,10 @@ import { cors } from 'hono/cors'
 import { database } from "../db/index.js";
 import { Package } from "../db/schema.js";
 import { eq, like } from "drizzle-orm";
+import { authMiddleware } from "./authMiddleware.js";
 
 const app = new Hono();
 
-// Add CORS middleware
 app.use('/*', cors({
   origin: (origin) => origin || '',   
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -52,7 +52,7 @@ app.get("/packages", async (c) => {
   }
 });
 
-app.post("/packages", async (c) => {
+app.post("/packages", authMiddleware , async (c) => {
   try {
     const data = await c.req.json();
     const id = Math.random().toString(36).substring(2, 15);
