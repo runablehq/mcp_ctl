@@ -11,7 +11,7 @@ import { RegistryManager } from "./registry/registry_manager";
 import { PackageMetadata } from "./types/registry";
 const registryManager = new RegistryManager({
   
-  baseUrl: process.env.BACKEND_URL || "https://mcpctl-production.up.railway.app",
+  baseUrl: process.env.BACKEND_URL || "https://mcpctl-production-8128.up.railway.app",
 });
 
 async function formatPackage(pkg: PackageMetadata) {
