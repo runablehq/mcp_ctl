@@ -9,6 +9,7 @@ import { term } from "./term";
 import { InputType } from "./create_package";
 import { RegistryManager } from "./registry/registry_manager";
 import { PackageMetadata } from "./types/registry";
+import { handleLogin } from './auth/login';
 const registryManager = new RegistryManager({
   
   baseUrl: process.env.BACKEND_URL || "https://mcpctl-production-8128.up.railway.app",
@@ -300,6 +301,27 @@ async function main() {
       },
       async (argv) => {
         await listPackages(argv.search as string | undefined);
+      }
+    )
+    .command(
+      'login <provider>',
+      'Login to a service provider',
+      (yargs) => {
+        return yargs
+          .positional('provider', {
+            describe: 'The service provider to login to (e.g., github)',
+            type: 'string',
+            demandOption: true,
+          })
+          .example('$0 login github', 'Login to GitHub');
+      },
+      async (argv) => {
+        try {
+          await handleLogin(argv.provider);
+        } catch (error: any) {
+          console.error(term.red('Login failed:'), error.message);
+          process.exit(1);
+        }
       }
     )
     .command(
