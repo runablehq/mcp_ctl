@@ -79,7 +79,7 @@ export class RegistryManager {
 
     pkg.inputs.forEach((input) => {
       if (inputs[input.name]) {
-        config.env[input.name] = inputs[input.name];
+        config.env[input.name] = String(inputs[input.name]);
       }
     });
 
